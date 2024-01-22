@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <script src="main.js"></script>
+</head>
+
+<body>
+    <textarea id="input" type="text"></textarea><br>
+    <button onclick="pushbtn('main')">run(main)</button>
+    <button onclick="pushbtn('reverse')">run(reverse)</button>
+    <div id="result"></div>
+    <script>
+        let result_area = document.getElementById('result')
+        function pushbtn(arg) {
+            if (arg == "main") {
+                result_area.innerHTML = main(document.getElementById('input').value)
+            } else {
+                result_area.innerHTML = reverse(document.getElementById('input').value)
+            }
+        }
+    </script>
+</body>
+
+</html>
