@@ -1,0 +1,43 @@
+.input_textarea {
+    border-width: 3px;
+    border-color: #dddddd;
+    border-radius: 10px;
+    width: 40vw;
+    height: 50vh;
+    outline: none;
+}
+
+.input_textarea:focus {
+    border-color: #aaaaaa;
+}
+
+.left {
+    position: absolute;
+    left: 0px;
+    width: 50%;
+}
+
+.right {
+    position: absolute;
+    left: 50%;
+    width: 50%;
+}
+
+.output_textarea {
+    border-width: 3px;
+    border-color: #dddddd;
+    border-radius: 10px;
+    width: 40vw;
+    height: 50vh;
+    outline: none;
+}
+
+.output_textarea:focus {
+    border-color: #aaaaaa;
+}
+
+.bottom {
+    position: absolute;
+    top: 50vh;
+    width: 100%;
+}

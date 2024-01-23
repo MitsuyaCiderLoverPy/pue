@@ -4,14 +4,24 @@
 <head>
     <meta charset="utf-8">
     <script src="main.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-    <textarea id="input" type="text"></textarea><br>
-    <button onclick="pushbtn('main')">run(main)</button>
-    <button onclick="pushbtn('reverse')">run(reverse)</button>
+<body style="position:relative">
+    <div class="left">
+        <textarea id="input" class="input_textarea"></textarea><br>
+    </div>
+    <div class="right">
+        <textarea id="output" class="output_textarea" readonly></textarea>
+    </div>
+    <div class="bottom" id="bottom">
+        <button onclick="pushbtn('main')">run(main)</button>
+        <button onclick="pushbtn('reverse')">run(reverse)</button>
+    </div>
     <div id="result"></div>
     <script>
+        let input_height = 0
+        let output_height = 0
         let result_area = document.getElementById('result')
         function pushbtn(arg) {
             if (arg == "main") {
@@ -20,6 +30,16 @@
                 result_area.innerHTML = reverse(document.getElementById('input').value)
             }
         }
+
+        document.getElementsByTagName('body')[0].addEventListner('mousemove', () => {
+            input_height = document.getElementById('input').offsetHeight;
+            output_height = document.getElementById('output').offsetHeight;
+            if (input_height <= output_height) {
+                document.getElementById('bottom').style.top = output_height
+            } else {
+                document.getElementById('bottom').style.top = input_height
+            }
+        })
     </script>
 </body>
 
