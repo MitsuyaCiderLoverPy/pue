@@ -8,38 +8,203 @@
 </head>
 
 <body style="position:relative">
-    <div class="left">
-        <textarea id="input" class="input_textarea"></textarea><br>
+    <div class="top">
+        <div onclick="console.log('clicked')" style="white-space:nowrap;">
+            <label onclick="rdo(1)" style="position:relative; cursor:pointer;"><input id="rdo1" type="radio"
+                    class="rdobtn" name="mode" style="top: 0px;">
+                <div class="rdobtn_btn"><svg class="rdobtn_btn_circle" viewbox="0 0 18 18"
+                        xmlns="http://www.w3.org/2000/svg" version="1.1" style="top: 0px;">
+                        <circle cx="9" cy="9" r="7.5" stroke-width="2" style="fill: rgba(0, 0, 0, 0); stroke:#c6b1e9">
+                        </circle>
+                        <circle id="rdo_circle1" cx="9" cy="9" r="4" stroke-width="2"
+                            style="fill: #c6b1e9; stroke:#c6b1e9"></circle>
+                    </svg><span class="rdo_text" id="rdo_text">人間後→ぷえぷえ語</span></div>
+            </label>
+            <label onclick="rdo(2)" style="position:relative; cursor:pointer;"><input id="rdo2" type="radio"
+                    class="rdobtn" name="mode" style="top: 18px;">
+                <div class="rdobtn_btn"><svg class="rdobtn_btn_circle" viewbox="0 0 18 18"
+                        xmlns="http://www.w3.org/2000/svg" version="1.1" style="top: 0px;">
+                        <circle cx="9" cy="9" r="7.5" stroke-width="2" style="fill: rgba(0, 0, 0, 0); stroke:#c6b1e9">
+                        </circle>
+                        <circle id="rdo_circle2" cx="9" cy="9" r="4" stroke-width="2"
+                            style="fill: #c6b1e9; stroke:#c6b1e9"></circle>
+                    </svg><span class="rdo_text" id="rdo_text2">ぷえぷえ語→人間語</span></div>
+            </label>
+            <button onclick="pushbtn()" id="button" class="button">翻訳</button>
+            <div class="twitter_share" onclick="share()">ツイートする</div>
+        </div>
     </div>
-    <div class="right">
+    <div style="height: 10vh;"></div><br>
+    <div class="left" id="input_parent">
+        <textarea id="input" class="input_textarea"></textarea><br>
+    </div><br>
+    <div class="right" id="output_parent">
         <textarea id="output" class="output_textarea" readonly></textarea>
     </div>
-    <div class="bottom" id="bottom">
-        <button onclick="pushbtn('main')">run(main)</button>
-        <button onclick="pushbtn('reverse')">run(reverse)</button>
+    <div id="display_disable" class="display_disable"></div>
+    <div id="msgbox" class="msgbox">
+        <div style="width: 100%; height:100%; position:relative;">
+            <div id="msg_content" class="msg_content">読み込み中...</div>
+            <button class="msg_btn" onclick="closemsgbox()" id="closebtn">閉じる</button>
+        </div>
     </div>
-    <div id="result"></div>
     <script>
         let input_height = 0
         let output_height = 0
-        let result_area = document.getElementById('result')
-        function pushbtn(arg) {
-            if (arg == "main") {
-                result_area.innerHTML = main(document.getElementById('input').value)
+        let result_area = document.getElementById('output')
+        let last_mode = ""
+        let last_text = ""
+
+        function pushbtn() {
+            msgbox("処理中ぷえ(∩ ๑•﹏•๑｀∩)", false)
+            setTimeout(function () {
+                let rdo1 = document.getElementById('rdo1')
+                let rdo2 = document.getElementById('rdo2')
+                if (rdo1.checked) {
+                    last_mode = "main"
+                    last_text = document.getElementById('input').value
+                    result_area.innerHTML = main(document.getElementById('input').value)
+                    closemsgbox()
+                } else if (rdo2.checked) {
+                    last_text = document.getElementById('input').value
+                    last_mode = "reverse"
+                    //last_text=reverse(document.getElementById('input').value)
+                    result_area.innerHTML = reverse(document.getElementById('input').value)
+                    closemsgbox()
+                }
+                else { console.log("error1"); error(1) }
+            }, 100)
+        }
+
+        function rdo(arg) {
+            console.log('rdo')
+            if (arg === 1) {
+                document.getElementById('rdo_circle1').style.display = "block"
+                document.getElementById('rdo_circle2').style.display = "none"
             } else {
-                result_area.innerHTML = reverse(document.getElementById('input').value)
+                document.getElementById('rdo_circle1').style.display = "none"
+                document.getElementById('rdo_circle2').style.display = "block"
+            }
+        }
+        window.onload = function () {
+            document.getElementById('rdo_circle1').style.display = "none"
+            document.getElementById('rdo_circle2').style.display = "none"
+            document.getElementById('msgbox').style.display = "none"
+            document.getElementById('display_disable').style.display = "none"
+            if ((window.innerWidth / window.innerHeight) < 1) {
+                document.getElementById('input_parent').className = "left2"
+                document.getElementById('output_parent').className = "right2"
+                document.getElementById('button').style.left = "calc(90vw - 100px)"
+                //document.getElementById('rdo_text').style.fontSize="5vw"
+                //document.getElementById('rdo_text2').style.fontSize="5vw"
             }
         }
 
-        document.getElementsByTagName('body')[0].addEventListner('mousemove', () => {
-            input_height = document.getElementById('input').offsetHeight;
-            output_height = document.getElementById('output').offsetHeight;
-            if (input_height <= output_height) {
-                document.getElementById('bottom').style.top = output_height
+        function error(code) {
+            if (code === 1) {
+                msgbox("翻訳方法を選択してください", true)
+            }
+        }
+
+        function msgbox(message, btn) {
+            console.log("msg_box")
+            document.getElementById('msgbox').style.display = "block"
+            document.getElementById('display_disable').style.display = "block"
+            document.getElementById('msg_content').innerHTML = message
+            console.log("msg_box2")
+            if (btn) {
+                document.getElementById('closebtn').style.display = "block"
             } else {
-                document.getElementById('bottom').style.top = input_height
+                document.getElementById('closebtn').style.display = "none"
+            }
+            console.log("msg_box3")
+
+        }
+        function closemsgbox() {
+            document.getElementById('msgbox').style.display = "none"
+            document.getElementById('display_disable').style.display = "none"
+        }
+
+        document.getElementsByTagName('body')[0].addEventListener('mousemove', () => {
+            if (window.innerWidth < window.innerHeight) {
+                document.getElementById('input_parent').className = "left2"
+                document.getElementById('output_parent').className = "right2"
+                document.getElementById('button').style.left = "calc(95vw - 15vh)"
+                //document.getElementById('rdo_text').style.fontSize="3vh"
+                //document.getElementById('rdo_text2').style.fontSize="3vh"
+
+            } else {
+                document.getElementById('input_parent').className = "left"
+                document.getElementById('output_parent').className = "right"
+                document.getElementById('button').style.left = "30vw"
+                //document.getElementById('rdo_text').style.fontSize="3vh"
+                //document.getElementById('rdo_text2').style.fontSize="3vh"   
             }
         })
+
+        function share() {
+            let result = ""
+            if (last_mode == "main") {
+                let uni = ""
+                let results = []
+                for (let i = 0; i < last_text.length; i++) {
+                    uni = last_text.codePointAt(i)
+                    results.push(uni.toString(36))
+                    results.push("_")
+                }
+                result = results.join("")
+                result = result.slice(0, result.length - 1)
+                console.log(result)
+                window.open(`https://twitter.com/intent/tweet?text=ぷえぷえ翻訳%0a${location.href}?m=m%26t=${result}`, '_blank')
+            } else {
+                console.log("else")
+                let pues = ["ぷえ〜", "ぷぇ〜", "ぷえー", "ぷぇー", "ぷえっ", "ぷぇっ", "ぷっえ", "ぷ〜え", "ぷーえ", "ぷ〜ぇ"]
+
+                last_text2 = last_text.replace('(∩ ๑•﹏•๑｀∩)', '')
+                while (last_text2 !== last_text) {
+                    last_text2 = last_text2.replace('(∩ ๑•﹏•๑｀∩)', '')
+                    last_text = last_text.replace('(∩ ๑•﹏•๑｀∩)', '')
+
+                }
+
+                console.log(last_text)
+                let nums = []
+                console.log(last_text.length)
+                console.log((last_text.length) / 3)
+                lt_len = last_text.length / 3
+                for (let i = 0; i < lt_len; i++) {
+                    console.log(last_text)
+                    console.log(pues.indexOf(last_text.slice(0, 3)))
+                    nums.push(pues.indexOf(String(last_text).slice(0, 3)))
+                    last_text = last_text.slice(3, last_text.length + 1)
+                    //console.log(i)
+                }
+                result = nums.join("")
+                console.log(result)
+            }
+            window.open(`https://twitter.com/intent/tweet?text=ぷえぷえ翻訳%0a${location.href}?m=r%26t=${result}`, '_blank')
+        }
+
+        function shared(mode, text) {
+            let mat_array = []
+            let results = []
+            let pues = ["ぷえ〜", "ぷぇ〜", "ぷえー", "ぷぇー", "ぷえっ", "ぷぇっ", "ぷっえ", "ぷ〜え", "ぷーえ", "ぷ〜ぇ"]
+            if (mode == "m") {
+                mat_array = text.split('_')
+                console.log(mat_array)
+                for (let i = 0; i < mat_array.length; i++) {
+                    console.log(parseInt(mat_array[i], 36))
+                    results.push(String.fromCodePoint(parseInt(mat_array[i], 36)))
+                }
+            } else {
+                for (let i = 0; i < text.length; i++) {
+                    console.log(text[i])
+                    results.push(pues[text[i]])
+                }
+            }
+            console.log(results.join(""))
+
+        }
     </script>
 </body>
 

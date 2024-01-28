@@ -11,8 +11,8 @@ function main(arg) {
         uni = arg.codePointAt(i)
         console.log(uni)
 
-        uni = "1000"+String(uni)
-        uni = uni.slice(uni.length-5, uni.length)
+        uni = "1000" + String(uni)
+        uni = uni.slice(uni.length - 5, uni.length)
         console.log(uni)
         for (let s = 0; s < String(uni).length; s++) {
             console.log(uni)
@@ -65,9 +65,12 @@ function reverse(arg2) {
         console.log(uni_array[s])
         result += String.fromCodePoint(uni_array[s])
     }
-    for(let i5=0; i5<=result.indexOf('\n'); i5++){
+
+    /*for(let i5=0; i5<=result.indexOf('\n'); i5++){
     result = result.replace("\n", "<br>")
     }
+    */
+
     console.log(result)
     return result
 }
